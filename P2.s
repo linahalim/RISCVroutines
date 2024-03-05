@@ -1,5 +1,5 @@
 .data
-str: .asciiz "sunshine"
+str: .asciiz "wow"
 
 .text
 main:
@@ -55,10 +55,6 @@ end:
     addi sp, sp, 12
     jalr ra, ra, 0
 
-exit:
-    li a0, 10
-    ecall
-
 strlen:
     li a0, 0         
 loop_strlen:
@@ -69,3 +65,5 @@ loop_strlen:
     j loop_strlen
 end_strlen:
     ret
+exit:
+	# end of code
