@@ -1,40 +1,38 @@
 
 .text
 _start:
-    lw t0, 0(a0)
+	addi a0, x0, 6
     jal ra, Fibonacci
-    mv a0, t0
-
-    j end_program
+    add x0, x0, x0
 
 Fibonacci:
-    addi sp, sp, -4
+    addi sp, sp, -12
     sw ra, 0(sp)
+    sw a0, 4(sp)
 
-    blez t0, base_cases
+    blez a0, base_cases
     li t1, 1
-    beq t0, t1, base_cases
+    beq a0, t1, base_cases
     li t1, 2
-    beq t0, t1, base_cases
+    beq a0, t1, base_cases
 
-    addi t0, t0, -1
+    addi a0, a0, -1
     jal ra, Fibonacci
-    mv t1, t0
+    sw a0, 8(sp)
+    lw a0, 4(sp)
 
-    addi t0, t0, -1
+    addi a0, a0, -2
     jal ra, Fibonacci
-    add t0, t0, t1
+    lw t1, 8(sp)
+    add a0, a0, t1
 
     lw ra, 0(sp)
-    addi sp, sp, 4
+    addi sp, sp, 12
 
-    mv a0, t0
     jalr ra, 0(ra)
 
 base_cases:
-    li t0, 0
-    mv a0, t0
+    li a0, 1
+    addi sp, sp, 12
     jalr ra, 0(ra)
 
-end_program:
-    jalr ra, 0(ra)
