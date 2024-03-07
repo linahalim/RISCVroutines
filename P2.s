@@ -1,69 +1,35 @@
 .data
-str: .asciiz "wow"
+  str: .asciiz "wow"  # input
 
 .text
+.globl main
 main:
-    la a0, str
-    jal ra, palin
-    mv a1, a0
-    bne a1, zero, not_palindrome
-    li a0, 0
-    j exit
+  la a0, str 
+  mv a1, a0  
 
-not_palindrome:
-    li a0, 1
-    j exit
+  get_length:
+  lbu a2, 0(a1)
+  addi a1, a1, 1  
+  bnez a2, get_length  
+ 
 
-palin:
-    addi sp, sp, -12
-    sw ra, 8(sp)
-    sw a0, 4(sp)
-    sw a1, 0(sp)
 
-    li t0, 0             
-    li t1, 0      
-    la t2, str             
-    add t1, t2, zero      
-    jal ra, strlen      
-    mv t3, a0         
-    add t1, t1, t3      
+  addi a1, a1, -2
 
-loop:
-    blt t0, t3, next  
 
-    bge t2, t1, equal  
+  compare:
+  lbu a2, 0(a0)  # load letter a2
+  lbu a3, 0(a1)  # load letter a3
+  bne a2, a3, not_palindrome  # check a2 = a3 
+  addi a0, a0, 1  
+  addi a1, a1, -1 
+  blt a0, a1, compare  # If a0 is less than a1, loop
 
-    lb a1, 0(t2)       
-    lb a2, 0(t1)      
-    beq a1, a2, next     
-    li a0, 0      
-    j end
+  # palindrome
+  li a0, 1
+  j exit
 
-next:
-    addi t0, t0, 1       
-    addi t1, t1, -1  
-    j loop
+  not_palindrome:
+  li a0, 0
 
-equal:
-    li a0, 1           
-    j end
-
-end:
-    lw ra, 8(sp)
-    lw a0, 4(sp)
-    lw a1, 0(sp)
-    addi sp, sp, 12
-    jalr ra, ra, 0
-
-strlen:
-    li a0, 0         
-loop_strlen:
-    lb a1, 0(a1)       
-    beqz a1, end_strlen   
-    addi a0, a0, 1     
-    addi a1, a1, 1  
-    j loop_strlen
-end_strlen:
-    ret
-exit:
-	# end of code
+  exit:
